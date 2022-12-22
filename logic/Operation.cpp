@@ -1,4 +1,3 @@
-#include "math.h"
 #include "Operation.h"
 
 //defining tirg functions
@@ -62,7 +61,7 @@ sf::Vector2f Operation::_rotate(sf::Vector2f vector, float angle){
     vector.x * a.y + vector.y * b.y);
     return rotation;
 }
-sf::Vector2f Operation::_rotate_by_90(sf::Vector2f vector){
+sf::Vector2f Operation::_rotateBy90(sf::Vector2f vector){
     float x = vector.y;
     float y = -vector.x;
     sf::Vector2f rotated_vector = sf::Vector2f(x, y);
@@ -80,12 +79,16 @@ float Operation::_dotProduct(sf::Vector2f a, sf::Vector2f b){
     float dot_product = a.x * b.x + a.y * b.y;
     return dot_product;
 }
-bool Operation::_parallel_vectors(sf::Vector2f a, sf::Vector2f b){
-    sf::Vector2f rotated_vector_a = this->_rotate_by_90(a);
+bool Operation::_parallelVectors(sf::Vector2f a, sf::Vector2f b){
+    sf::Vector2f rotated_vector_a = this->_rotateBy90(a);
     float dot_product = this->_dotProduct(rotated_vector_a, b);
     cout << round(dot_product) << endl;
     if(round(dot_product) >= -0.f && round(dot_product) <= 0.f)
         return true;
     else
         return false;
+}
+sf::Vector2f Operation::_vectorProjection(sf::Vector2f a, sf::Vector2f b){
+    float p_1 = this->_dotProduct(a, b)/pow(this->_magnitude(b), 2);
+    return b*p_1;
 }

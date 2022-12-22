@@ -11,19 +11,32 @@ bool CollisionDetectionOperation::_ballOverlapping(float radius_a, float radius_
 
     return (radius_a + radius_b) >= distance_between_balls;
 }
+bool CollisionDetectionOperation::_ballLineOverlapping(sf::CircleShape a, Line l){
+    sf::Vector2f lc = this->operation._displacement(a.getPosition(), l.getBase());
+    sf::Vector2f projection = this->operation._vectorProjection(lc, l.getDirection());
+    nearest_point = l.getBase() + projection;
+    return this->_ballPointCollide(a, nearest_point);
+}
 //penetration and collision resolution
 void CollisionDetectionOperation::_ballBallPenetrationResolution(sf::CircleShape a, sf::CircleShape b){
-    sf::Vector2f displacement = this->operation._displacement(b.getPosition(), a.getPosition());
+    sf::Vector2f displacement = this->operation._displacement(a.getPosition(), b.getPosition());
     float distance = this->operation._magnitude(displacement);
     float penetration_depth = (a.getRadius() + b.getRadius()) - distance;
     sf::Vector2f penetration_resolution = this->operation._unitVector(displacement) * penetration_depth/2.f;
-    this->a_ball = -penetration_resolution;
-    this->b_ball = penetration_resolution;
+    this->a_ball = penetration_resolution;
+    this->b_ball = -penetration_resolution;
+}
+void CollisionDetectionOperation::_ballPointPenetrationResolution(sf::CircleShape a, sf::Vector2f p){
+    sf::Vector2f displacement = this->operation._displacement(a.getPosition(), p);
+    float distance = this->operation._magnitude(displacement);
+    float penetration_distance = a.getRadius() - distance;
+    sf::Vector2f penetration_resolution = this->operation._unitVector(displacement) * penetration_distance/2.f;
+    this->a_ball = penetration_resolution;
 }
 
     //actual collision functions
 bool CollisionDetectionOperation::_linesCollide(Line a, Line b){
-    if(operation._parallel_vectors(a.getDirection(), b.getDirection()))
+    if(operation._parallelVectors(a.getDirection(), b.getDirection()))
         return false;
     else 
         return true;
@@ -45,9 +58,19 @@ bool CollisionDetectionOperation::_boxCollide(Box a, Box b){
     return this->_boxOverlapping(a_left, a_right, b_left, b_right) && this->_boxOverlapping(a_top, a_bottom, b_top, b_bottom);
 }
 
-bool CollisionDetectionOperation::_ballCollide(sf::CircleShape a, sf::CircleShape b){
+bool CollisionDetectionOperation::_ballBallCollide(sf::CircleShape a, sf::CircleShape b){
     float a_radius = a.getRadius();
     float b_radius = b.getRadius();
 
     return _ballOverlapping(a_radius, b_radius, a.getPosition(), b.getPosition());
+}
+
+bool CollisionDetectionOperation::_ballPointCollide(sf::CircleShape a, sf::Vector2f point){
+    sf::Vector2f displacement = this->operation._displacement(a.getPosition(), point);
+    float distance = this->operation._magnitude(displacement);
+    return distance <= a.getRadius();
+}
+
+bool CollisionDetectionOperation::_ballWindowCollide(sf::CircleShape a, Line l1, Line l2, Line l3, Line l4){
+    return this->_ballLineOverlapping(a, l1) || this->_ballLineOverlapping(a, l2) || this->_ballLineOverlapping(a, l3) || this->_ballLineOverlapping(a, l4);
 }
