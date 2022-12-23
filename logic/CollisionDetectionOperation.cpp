@@ -12,9 +12,29 @@ bool CollisionDetectionOperation::_ballOverlapping(float radius_a, float radius_
     return (radius_a + radius_b) >= distance_between_balls;
 }
 bool CollisionDetectionOperation::_ballLineOverlapping(sf::CircleShape a, Line l){
+    float x_value;
+    float y_value;
+
+    if(l.getBase().x == 640.f && l.getDirection().x == 640.f){
+        x_value = 640.f;
+        y_value = 0.f;
+        l.setBase(sf::Vector2f(0.f, 0.f));
+        l.setDirection(sf::Vector2f(0.f, 360.f));
+    }else if(l.getBase().y == 360.f && l.getDirection().y == 360.f){
+        x_value = 0.f;
+        y_value = 360.f;
+        l.setBase(sf::Vector2f(0.f, 0.f));
+        l.setDirection(sf::Vector2f(640.f, 0.f));
+    }else{
+        x_value = 0.f;
+        y_value = 0.f;
+    }
+
     sf::Vector2f lc = this->operation._displacement(a.getPosition(), l.getBase());
     sf::Vector2f projection = this->operation._vectorProjection(lc, l.getDirection());
     nearest_point = l.getBase() + projection;
+    nearest_point.x += x_value;
+    nearest_point.y += y_value;
     return this->_ballPointCollide(a, nearest_point);
 }
 //penetration and collision resolution

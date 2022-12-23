@@ -24,10 +24,10 @@ class Engine{
         Operation operation;
         Player player;
         Ball ball;
-        Line line1 = Line(sf::Vector2f(0.f, 0.f), sf::Vector2f(640.f, 0.f));//up
-        Line line2 = Line(sf::Vector2f(0.f, 0.f), sf::Vector2f(0.f, 360.f));//left
-        Line line3 = Line(sf::Vector2f(640.f, 0.f), sf::Vector2f(640.f, 360.f));//right
-        Line line4 = Line(sf::Vector2f(0.f, 360.f), sf::Vector2f(640.f, 360.f));//down
+        Line line1 = Line(sf::Vector2f(0, 0), sf::Vector2f(640, 0));//up
+        Line line2 = Line(sf::Vector2f(0, 0), sf::Vector2f(0, 360));//left
+        Line line3 = Line(sf::Vector2f(640, 0), sf::Vector2f(640, 360));//right
+        Line line4 = Line(sf::Vector2f(0, 360), sf::Vector2f(640, 360));//down
 
         //mouse position
         sf::Vector2i mouse_position;
