@@ -6,33 +6,22 @@ void Ball::initBall(){
     this->acceleration = 0.1f;
 }
 
-void Ball::createBall(sf::Vector2f vector){
-    this->ball_property.setRadius(30.f);
-    this->ball_property.setFillColor(sf::Color::White);
-    this->ball_property.setPosition(vector);
-    this->balls.push_back(this->ball_property);
-}
-
 //defining constructor
 Ball::Ball(){
     this->initBall();
 }
 
 //defining main functions
-void Ball::ballUpdate(sf::Vector2f vector){
-    bool q_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Q);
-    if(q_pressed)
-        this->createBall(vector);
+void Ball::ballUpdate(){  
+    this->ballMovement();
 }
 void Ball::ballRender(sf::RenderTarget* target){
-    for(int i = 0; i < this->balls.size(); i++){
-        target->draw(this->balls[i]);
-    }
+    target->draw(this->ball_property);
 }
 
 //defining transform functions
 void Ball::ballMovement(){
-    //..
+    this->ball_property.move(this->getBallVelocity());
 }
 
 //defiining accessors and mutators
@@ -44,4 +33,10 @@ float Ball::getBallRadius(){
 }
 void Ball::setBallPosition(sf::Vector2f vector){
     this->ball_property.setPosition(vector);
+}
+sf::Vector2f Ball::getBallVelocity(){
+    return this->velocity;
+}
+void Ball::setBallVelocity(sf::Vector2f velocity){
+    this->velocity = velocity;
 }

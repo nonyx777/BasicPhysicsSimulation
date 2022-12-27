@@ -23,7 +23,6 @@ class Engine{
         CollisionDetectionOperation collisionDetectionOperation;
         Operation operation;
         Player player;
-        Ball ball;
         Line line1 = Line(sf::Vector2f(0, 0), sf::Vector2f(640, 0));//up
         Line line2 = Line(sf::Vector2f(0, 0), sf::Vector2f(0, 360));//left
         Line line3 = Line(sf::Vector2f(640, 0), sf::Vector2f(640, 360));//right
@@ -32,6 +31,10 @@ class Engine{
         //mouse position
         sf::Vector2i mouse_position;
         sf::Vector2f mouse_position_view;
+
+        //entitiy containers
+        std::vector<Ball> balls;
+        std::vector<sf::CircleShape> ball_shapes;
 
     public:
         //constructor and destructor
@@ -46,6 +49,9 @@ class Engine{
         //Accessors
         const bool running() const;
 
-        //draw entities
+        //create Entities
+        void createEntities(sf::Vector2f vector);
+
+        //collide entities
         void collideEntities();
 };

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
 
@@ -5,23 +6,24 @@ class Ball{
     private:
         
         //attributes
+        sf::Vector2f acceleration_vector;
         float acceleration;
         float radius;
 
         //initializer functions
         void initBall();
-        void createBall(sf::Vector2f vector);
 
         //instantiating objects
 
     public:
+        //..
+        int current_colliding_ball;
+        sf::Vector2f velocity;
         sf::CircleShape ball_property;
         //constructor
         Ball();
-        //ball container vector
-        std::vector<sf::CircleShape> balls;
         //main ball functions
-        void ballUpdate(sf::Vector2f vector);
+        void ballUpdate();
         void ballRender(sf::RenderTarget* target);
 
         //transform functions
@@ -31,4 +33,6 @@ class Ball{
         sf::Vector2f getBallPosition();
         float getBallRadius();
         void setBallPosition(sf::Vector2f vector);
+        sf::Vector2f getBallVelocity();
+        void setBallVelocity(sf::Vector2f);
 };

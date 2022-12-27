@@ -3,8 +3,16 @@
 class Player{
     private:
         //attributes
+        sf::Vector2f acceleration_vector;
         float acceleration;
+        float friction;
         float radius;
+
+        //inputs
+        bool w_pressed;
+        bool s_pressed;
+        bool a_pressed;
+        bool d_pressed;
 
         //initializer functions
         void initPlayer();
@@ -12,19 +20,22 @@ class Player{
         //instantiating objects
 
     public:
+        sf::Vector2f velocity;
         sf::CircleShape player_property;
         //constructor
         Player(float x = 640.f/2, float y = 360.f/2);
 
         //main player functions
-        void playerUpdate(sf::Vector2f vector);
+        void playerUpdate();
         void playerRender(sf::RenderTarget* target);
 
         //transform functions
-        void playerMovement(sf::Vector2f target_position);
+        void playerMovement();
 
         //accessors and mutators
         sf::Vector2f getPlayerPosition();
         float getPlayerRadius();
         void setPlayerPosition(sf::Vector2f vector);
+        sf::Vector2f getPlayerVelocity();
+        void setPlayerVelocity(sf::Vector2f vector);
 };
