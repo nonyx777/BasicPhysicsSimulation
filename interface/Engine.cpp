@@ -41,13 +41,16 @@ void Engine::createEntities(sf::Vector2f vector){
 }
 
 void Engine::collideEntities(){
-    //penetration resolution
+    //penetration resolution and collision resolution
         //player and ball
     for(auto &ball : this->balls){
         if(this->collisionDetectionOperation._ballBallCollide(this->player.player_property, ball.ball_property)){
             this->collisionDetectionOperation._ballBallPenetrationResolution(this->player.player_property, ball.ball_property);
             this->player.player_property.move(this->collisionDetectionOperation.a_ball);
             ball.ball_property.move(this->collisionDetectionOperation.b_ball);
+            this->collisionDetectionOperation._ballBallCollisionResolution(this->player, ball);
+            this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
+            ball.setBallVelocity(this->collisionDetectionOperation.b_velocity);
         }
     }
     // }
@@ -56,6 +59,8 @@ void Engine::collideEntities(){
         if(collisionDetectionOperation._ballLineOverlapping(this->player.player_property, boundary)){
             this->collisionDetectionOperation._ballPointPenetrationResolution(this->player.player_property, this->collisionDetectionOperation.nearest_point);
             this->player.player_property.move(this->collisionDetectionOperation.a_ball);
+            this->collisionDetectionOperation._ballPointCollisionResolution(this->player, collisionDetectionOperation.nearest_point);
+            this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
         }
     }
         //ball and ball
@@ -65,6 +70,9 @@ void Engine::collideEntities(){
                 this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i].ball_property, this->balls[j].ball_property);
                 this->balls[i].ball_property.move(this->collisionDetectionOperation.a_ball);
                 this->balls[j].ball_property.move(this->collisionDetectionOperation.b_ball);
+                this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
+                this->balls[i].setBallVelocity(this->collisionDetectionOperation.a_velocity);
+                this->balls[j].setBallVelocity(this->collisionDetectionOperation.b_velocity);
             }
         }
     }
@@ -74,45 +82,11 @@ void Engine::collideEntities(){
             if(collisionDetectionOperation._ballLineOverlapping(ball.ball_property, boundary)){
                 this->collisionDetectionOperation._ballPointPenetrationResolution(ball.ball_property, this->collisionDetectionOperation.nearest_point);
                 ball.ball_property.move(this->collisionDetectionOperation.a_ball);
-            }
-        }   
-    }
-
-    //collision resolution
-        //player and ball
-    for(auto &ball : this->balls){
-        if(this->collisionDetectionOperation._ballBallCollide(this->player.player_property, ball.ball_property)){
-            this->collisionDetectionOperation._ballBallCollisionResolution(this->player, ball);
-            this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
-            ball.setBallVelocity(this->collisionDetectionOperation.b_velocity);
-        }
-    }
-        //ball and ball
-    for(int i = 0; i < this->balls.size(); i++){
-        for(int j = i+1; j < this->balls.size(); j++){
-            if(this->collisionDetectionOperation._ballBallCollide(this->balls[i].ball_property, this->balls[j].ball_property)){
-                this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
-                this->balls[i].setBallVelocity(this->collisionDetectionOperation.a_velocity);
-                this->balls[j].setBallVelocity(this->collisionDetectionOperation.b_velocity);
-            }
-        }
-    }
-        //player and window(line)
-    for(auto &boundary : this->window_boundaries){
-        if(this->collisionDetectionOperation._ballLineOverlapping(this->player, boundary)){
-            this->collisionDetectionOperation._ballPointCollisionResolution(this->player, collisionDetectionOperation.nearest_point);
-            this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
-        }
-    }
-        //ball and window(line)
-    for(auto &boundary: this->window_boundaries){
-        for(auto &ball : this->balls){
-            if(this->collisionDetectionOperation._ballLineOverlapping(ball.ball_property, boundary)){
                 this->collisionDetectionOperation._ballPointCollisionResolution(ball, collisionDetectionOperation.nearest_point);
                 ball.setBallVelocity(this->collisionDetectionOperation.b_velocity);
             }
-        }
-    } 
+        }   
+    }
 }
 
 //defining window functions
