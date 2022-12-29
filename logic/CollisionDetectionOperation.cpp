@@ -6,10 +6,7 @@ bool CollisionDetectionOperation::_boxOverlapping(float min_a, float max_a, floa
     return min_b <= max_a && min_a <= max_b;
 }
 bool CollisionDetectionOperation::_ballOverlapping(float radius_a, float radius_b, sf::Vector2f origin_a, sf::Vector2f origin_b){
-    sf::Vector2f distance_vector = origin_b - origin_a;
-    float distance_between_balls = operation._magnitude(distance_vector);
-
-    return (radius_a + radius_b) >= distance_between_balls;
+    return operation._magnitude(origin_b - origin_a) <= (radius_a + radius_b);
 }
 bool CollisionDetectionOperation::_ballLineOverlapping(sf::CircleShape a, Line l){
     float x_value;
@@ -64,10 +61,18 @@ bool CollisionDetectionOperation::_ballLineOverlapping(Player a, Line l){
     return this->_ballPointCollide(a.player_property, nearest_point);
 }
 //penetration and collision resolution
-void CollisionDetectionOperation::_ballBallPenetrationResolution(sf::CircleShape a, sf::CircleShape b){
-    sf::Vector2f displacement = this->operation._displacement(a.getPosition(), b.getPosition());
+void CollisionDetectionOperation::_ballBallPenetrationResolution(Player a, Ball b){
+    sf::Vector2f displacement = this->operation._displacement(a.getPlayerPosition(), b.getBallPosition());
     float distance = this->operation._magnitude(displacement);
-    float penetration_depth = (a.getRadius() + b.getRadius()) - distance;
+    float penetration_depth = (a.getPlayerRadius() + b.getBallRadius()) - distance;
+    sf::Vector2f penetration_resolution = this->operation._unitVector(displacement) * penetration_depth/(a.getPlayerInverseMass() + b.getBallInverseMass());
+    this->a_ball = penetration_resolution * a.getPlayerInverseMass();
+    this->b_ball = -penetration_resolution * b.getBallInverseMass();
+}
+void CollisionDetectionOperation::_ballBallPenetrationResolution(Ball a, Ball b){
+    sf::Vector2f displacement = this->operation._displacement(a.getBallPosition(), b.getBallPosition());
+    float distance = this->operation._magnitude(displacement);
+    float penetration_depth = (a.getBallRadius() + b.getBallRadius()) - distance;
     sf::Vector2f penetration_resolution = this->operation._unitVector(displacement) * penetration_depth/2.f;
     this->a_ball = penetration_resolution;
     this->b_ball = -penetration_resolution;
@@ -77,18 +82,20 @@ void CollisionDetectionOperation::_ballBallCollisionResolution(Player a, Ball b)
     normal = this->operation._unitVector(normal);
     sf::Vector2f relative_velocity = this->operation._displacement(a.getPlayerVelocity(), b.getBallVelocity());
     float separating_velocity = this->operation._dotProduct(relative_velocity, normal);
-    sf::Vector2f separating_velocity_vector = normal * separating_velocity;
-    this->a_velocity = -separating_velocity_vector;
-    this->b_velocity = separating_velocity_vector;
+    float impulse = -separating_velocity - separating_velocity/(a.getPlayerInverseMass() + b.getBallInverseMass());
+    sf::Vector2f impulse_vector = normal * impulse;
+    this->a_velocity = impulse_vector * a.getPlayerInverseMass() * a.getPlayerElasticity();
+    this->b_velocity = -impulse_vector * b.getBallInverseMass() * b.getBallElasticity();
 }
 void CollisionDetectionOperation::_ballBallCollisionResolution(Ball a, Ball b){
     sf::Vector2f normal = this->operation._displacement(a.getBallPosition(), b.getBallPosition());
     normal = this->operation._unitVector(normal);
     sf::Vector2f relative_velocity = this->operation._displacement(a.getBallVelocity(), b.getBallVelocity());
     float separating_velocity = this->operation._dotProduct(relative_velocity, normal);
-    sf::Vector2f separating_velocity_vector = normal * separating_velocity;
-    this->a_velocity = -separating_velocity_vector;
-    this->b_velocity = separating_velocity_vector;
+    float impulse = -separating_velocity - separating_velocity/(a.getBallInverseMass() + b.getBallInverseMass());
+    sf::Vector2f impulse_vector = normal * impulse;
+    this->a_velocity = impulse_vector * a.getBallInverseMass() * a.getBallElasticity();
+    this->b_velocity = -impulse_vector * b.getBallInverseMass() * b.getBallElasticity();
 }
 void CollisionDetectionOperation::_ballPointPenetrationResolution(sf::CircleShape a, sf::Vector2f p){
     sf::Vector2f displacement = this->operation._displacement(a.getPosition(), p);
@@ -112,7 +119,6 @@ void CollisionDetectionOperation::_ballPointCollisionResolution(Ball ball, sf::V
     float separating_velocity = this->operation._dotProduct(relative_velocity, normal);
     sf::Vector2f separating_velocity_vector = normal * separating_velocity;
     this->b_velocity = -separating_velocity_vector;
-
 }
 
     //actual collision functions
@@ -140,16 +146,10 @@ bool CollisionDetectionOperation::_boxCollide(Box a, Box b){
 }
 
 bool CollisionDetectionOperation::_ballBallCollide(sf::CircleShape a, sf::CircleShape b){
-    float a_radius = a.getRadius();
-    float b_radius = b.getRadius();
-
-    return _ballOverlapping(a_radius, b_radius, a.getPosition(), b.getPosition());
+    return _ballOverlapping(a.getRadius(), b.getRadius(), a.getPosition(), b.getPosition());
 }
 bool CollisionDetectionOperation::_ballBallCollide(Player a, Ball b){
-    float a_radius = a.getPlayerRadius();
-    float b_radius = b.getBallRadius();
-
-    return _ballOverlapping(a_radius, b_radius, a.getPlayerPosition(), b.getBallPosition());
+    return _ballOverlapping(a.getPlayerRadius(), b.getBallRadius(), a.getPlayerPosition(), b.getBallPosition());
 }
 bool CollisionDetectionOperation::_ballPointCollide(sf::CircleShape a, sf::Vector2f point){
     sf::Vector2f displacement = this->operation._displacement(a.getPosition(), point);

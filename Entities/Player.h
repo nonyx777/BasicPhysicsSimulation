@@ -7,6 +7,9 @@ class Player{
         float acceleration;
         float friction;
         float radius;
+        float elasticity;
+        float mass;
+        float inverse_mass;
 
         //inputs
         bool w_pressed;
@@ -38,4 +41,9 @@ class Player{
         void setPlayerPosition(sf::Vector2f vector);
         sf::Vector2f getPlayerVelocity();
         void setPlayerVelocity(sf::Vector2f vector);
+        float getPlayerElasticity();
+        void setPlayerElasticity(float elasticity);
+        float getPlayerMass();
+        void setPlayerMass(float mass);
+        float getPlayerInverseMass();
 };

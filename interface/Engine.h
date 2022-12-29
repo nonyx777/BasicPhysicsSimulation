@@ -34,7 +34,6 @@ class Engine{
 
         //entitiy containers
         std::vector<Ball> balls;
-        std::vector<sf::CircleShape> ball_shapes;
 
     public:
         //constructor and destructor

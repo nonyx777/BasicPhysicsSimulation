@@ -4,6 +4,9 @@
 //defining initializer functions
 void Ball::initBall(){
     this->acceleration = 0.1f;
+    this->elasticity = 1.f;
+    this->mass = 20.f;
+    this->inverse_mass = this->mass == 0.f ? 0.f : 1.f/this->mass;
 }
 
 //defining constructor
@@ -39,4 +42,19 @@ sf::Vector2f Ball::getBallVelocity(){
 }
 void Ball::setBallVelocity(sf::Vector2f velocity){
     this->velocity = velocity;
+}
+float Ball::getBallElasticity(){
+    return this->elasticity;
+}
+void Ball::setBallElasticity(float elasticity){
+    this->elasticity = elasticity;
+}
+float Ball::getBallMass(){
+    return this->mass;
+}
+void Ball::setBallMass(float mass){
+    this->mass = mass;
+}
+float Ball::getBallInverseMass(){
+    return this->inverse_mass;
 }

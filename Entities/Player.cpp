@@ -5,13 +5,17 @@
 void Player::initPlayer(){
     this->acceleration = 1.f;
     this->friction = 0.1f;
-    this->player_property.setRadius(10.f);
+    this->elasticity = 1.f;
+    this->mass = 5.f;
+    this->inverse_mass = this->mass == 0.f ? 0.f : 1.f/this->mass;
+    this->player_property.setRadius(20.f);
     this->player_property.setFillColor(sf::Color::Blue);
 }
 
 //defining constructor
 Player::Player(float x, float y){
     this->initPlayer();
+    this->player_property.setOrigin(sf::Vector2f(this->getPlayerRadius(), this->getPlayerRadius()));
     this->player_property.setPosition(sf::Vector2f(x, y));
 }
 
@@ -69,4 +73,19 @@ sf::Vector2f Player::getPlayerVelocity(){
 }
 void Player::setPlayerVelocity(sf::Vector2f vector){
     this->velocity = vector;
+}
+float Player::getPlayerElasticity(){
+    return this->elasticity;
+}
+void Player::setPlayerElasticity(float elasticity){
+    this->elasticity = elasticity;
+}
+float Player::getPlayerMass(){
+    return this->mass;
+}
+void Player::setPlayerMass(float mass){
+    this->mass = mass;
+}
+float Player::getPlayerInverseMass(){
+    return this->inverse_mass;
 }

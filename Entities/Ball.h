@@ -9,6 +9,10 @@ class Ball{
         sf::Vector2f acceleration_vector;
         float acceleration;
         float radius;
+        float friction;
+        float elasticity;
+        float mass;
+        float inverse_mass;
 
         //initializer functions
         void initBall();
@@ -35,4 +39,9 @@ class Ball{
         void setBallPosition(sf::Vector2f vector);
         sf::Vector2f getBallVelocity();
         void setBallVelocity(sf::Vector2f);
+        float getBallElasticity();
+        void setBallElasticity(float elasticity);
+        float getBallMass();
+        void setBallMass(float mass);
+        float getBallInverseMass();
 };

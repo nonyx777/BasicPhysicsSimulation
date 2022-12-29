@@ -31,13 +31,11 @@ const bool Engine::running() const{
 
 void Engine::createEntities(sf::Vector2f vector){
     Ball ball;
-    ball.ball_property.setRadius(10.f);
+    ball.ball_property.setRadius(40.f);
     ball.ball_property.setFillColor(sf::Color::White);
+    ball.ball_property.setOrigin(sf::Vector2f(ball.getBallRadius(), ball.getBallRadius()));
     ball.ball_property.setPosition(vector);
     this->balls.push_back(ball);
-    for(auto &ball : this->balls){
-        this->ball_shapes.push_back(ball.ball_property);
-    }
 }
 
 void Engine::collideEntities(){
@@ -45,7 +43,7 @@ void Engine::collideEntities(){
         //player and ball
     for(auto &ball : this->balls){
         if(this->collisionDetectionOperation._ballBallCollide(this->player.player_property, ball.ball_property)){
-            this->collisionDetectionOperation._ballBallPenetrationResolution(this->player.player_property, ball.ball_property);
+            this->collisionDetectionOperation._ballBallPenetrationResolution(this->player, ball);
             this->player.player_property.move(this->collisionDetectionOperation.a_ball);
             ball.ball_property.move(this->collisionDetectionOperation.b_ball);
             this->collisionDetectionOperation._ballBallCollisionResolution(this->player, ball);
@@ -67,7 +65,7 @@ void Engine::collideEntities(){
     for(int i = 0; i < this->balls.size(); i++){
         for(int j = i+1; j < this->balls.size(); j++){
             if(this->collisionDetectionOperation._ballBallCollide(this->balls[i].ball_property, this->balls[j].ball_property)){
-                this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i].ball_property, this->balls[j].ball_property);
+                this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i], this->balls[j]);
                 this->balls[i].ball_property.move(this->collisionDetectionOperation.a_ball);
                 this->balls[j].ball_property.move(this->collisionDetectionOperation.b_ball);
                 this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
@@ -111,15 +109,13 @@ void Engine::update(){
 
     this->player.playerUpdate();
 
-    for(int i = 0; i < this->balls.size(); i++){
-        this->balls[i].ballUpdate();
-    }
+    for(auto &ball : this->balls)
+        ball.ballUpdate();
 }
 void Engine::render(){
     this->window->clear(sf::Color::Black);
     this->player.playerRender(this->window);
-    for(int i = 0; i < this->balls.size(); i++){
-        this->balls[i].ballRender(this->window);
-    }
+    for(auto &ball : this->balls)
+        ball.ballRender(this->window);
     this->window->display();
 }
