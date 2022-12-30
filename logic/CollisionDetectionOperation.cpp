@@ -9,6 +9,7 @@ bool CollisionDetectionOperation::_ballOverlapping(float radius_a, float radius_
     return operation._magnitude(origin_b - origin_a) <= (radius_a + radius_b);
 }
 bool CollisionDetectionOperation::_ballLineOverlapping(sf::CircleShape a, Line l){
+    
     float x_value;
     float y_value;
 
@@ -33,6 +34,25 @@ bool CollisionDetectionOperation::_ballLineOverlapping(sf::CircleShape a, Line l
     nearest_point.x += x_value;
     nearest_point.y += y_value;
     return this->_ballPointCollide(a, nearest_point);
+}
+bool CollisionDetectionOperation::_ballSegmentOverlapping(sf::CircleShape a, Line l){
+    if(this->_ballPointCollide(a, l.getBase())){
+        nearest_point = l.getBase();
+        return this->_ballPointCollide(a, nearest_point);
+    }
+    if(this->_ballPointCollide(a, l.getDirection())){
+        nearest_point = l.getDirection();
+        return this->_ballPointCollide(a, nearest_point);
+    }
+
+    sf::Vector2f d = l.getDirection() - l.getBase();
+    sf::Vector2f lc = a.getPosition() - l.getBase();
+    sf::Vector2f p = this->operation._vectorProjection(lc, d);
+    nearest_point = l.getBase() + p;
+
+    return this->_ballPointCollide(a, nearest_point) && 
+    this->operation._magnitude(p) <= this->operation._magnitude(d) && 
+    0 <= this->operation._dotProduct(p, d);
 }
 bool CollisionDetectionOperation::_ballLineOverlapping(Player a, Line l){
     float x_value;
@@ -110,7 +130,7 @@ void CollisionDetectionOperation::_ballPointCollisionResolution(Player player, s
     sf::Vector2f relative_velocity = this->operation._displacement(player.getPlayerVelocity(), sf::Vector2f(0.f, 0.f));
     float separating_velocity = this->operation._dotProduct(relative_velocity, normal);
     sf::Vector2f separating_velocity_vector = normal * separating_velocity;
-    this->a_velocity = -separating_velocity_vector;
+    this->a_velocity = -separating_velocity_vector * player.getPlayerElasticity();
 }
 void CollisionDetectionOperation::_ballPointCollisionResolution(Ball ball, sf::Vector2f point){
     sf::Vector2f normal = this->operation._displacement(ball.getBallPosition(), point);

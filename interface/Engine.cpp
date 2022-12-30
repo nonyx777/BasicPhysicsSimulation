@@ -7,6 +7,7 @@ void Engine::initVariables(){
     this->window_boundaries.push_back(line2);
     this->window_boundaries.push_back(line3);
     this->window_boundaries.push_back(line4);
+    this->window_boundaries.push_back(n_line);
 }
 void Engine::initWindow(){
     this->video_mode.width = 640;
@@ -31,7 +32,7 @@ const bool Engine::running() const{
 
 void Engine::createEntities(sf::Vector2f vector){
     Ball ball;
-    ball.ball_property.setRadius(40.f);
+    ball.ball_property.setRadius(20.f);
     ball.ball_property.setFillColor(sf::Color::White);
     ball.ball_property.setOrigin(sf::Vector2f(ball.getBallRadius(), ball.getBallRadius()));
     ball.ball_property.setPosition(vector);
@@ -54,7 +55,7 @@ void Engine::collideEntities(){
     // }
         //player and window
     for(auto &boundary : this->window_boundaries){
-        if(collisionDetectionOperation._ballLineOverlapping(this->player.player_property, boundary)){
+        if(collisionDetectionOperation._ballSegmentOverlapping(this->player.player_property, boundary)){
             this->collisionDetectionOperation._ballPointPenetrationResolution(this->player.player_property, this->collisionDetectionOperation.nearest_point);
             this->player.player_property.move(this->collisionDetectionOperation.a_ball);
             this->collisionDetectionOperation._ballPointCollisionResolution(this->player, collisionDetectionOperation.nearest_point);
@@ -77,7 +78,7 @@ void Engine::collideEntities(){
         //ball and window(line)
     for(auto &boundary : this->window_boundaries){
         for(auto &ball : this->balls){
-            if(collisionDetectionOperation._ballLineOverlapping(ball.ball_property, boundary)){
+            if(collisionDetectionOperation._ballSegmentOverlapping(ball.ball_property, boundary)){
                 this->collisionDetectionOperation._ballPointPenetrationResolution(ball.ball_property, this->collisionDetectionOperation.nearest_point);
                 ball.ball_property.move(this->collisionDetectionOperation.a_ball);
                 this->collisionDetectionOperation._ballPointCollisionResolution(ball, collisionDetectionOperation.nearest_point);
@@ -117,5 +118,7 @@ void Engine::render(){
     this->player.playerRender(this->window);
     for(auto &ball : this->balls)
         ball.ballRender(this->window);
+    for(auto &line : this->window_boundaries)
+        line.lineRender(this->window);
     this->window->display();
 }

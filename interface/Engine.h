@@ -28,6 +28,8 @@ class Engine{
         Line line3 = Line(sf::Vector2f(640, 0), sf::Vector2f(640, 360));//right
         Line line4 = Line(sf::Vector2f(0, 360), sf::Vector2f(640, 360));//down
 
+        Line n_line = Line(sf::Vector2f(100.f, 100.f), sf::Vector2f(300.f, 300.f));
+
         //mouse position
         sf::Vector2i mouse_position;
         sf::Vector2f mouse_position_view;

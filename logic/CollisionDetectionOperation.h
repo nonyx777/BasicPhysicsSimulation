@@ -29,6 +29,7 @@ class CollisionDetectionOperation{
         bool _ballOverlapping(float radius_a, float radius_b, sf::Vector2f origin_a, sf::Vector2f origin_b);
         bool _boxLineOverlapping();
         bool _ballLineOverlapping(sf::CircleShape a, Line l);
+        bool _ballSegmentOverlapping(sf::CircleShape a, Line l);
         bool _ballLineOverlapping(Player a, Line l);
         //penetretion and collision resolution
         void _ballBallPenetrationResolution(Player a, Ball b);

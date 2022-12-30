@@ -5,7 +5,7 @@
 void Ball::initBall(){
     this->acceleration = 0.1f;
     this->elasticity = 1.f;
-    this->mass = 20.f;
+    this->mass = 2.5f;
     this->inverse_mass = this->mass == 0.f ? 0.f : 1.f/this->mass;
 }
 
