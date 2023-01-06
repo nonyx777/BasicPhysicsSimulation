@@ -30,12 +30,15 @@ class Engine{
 
         Line n_line = Line(sf::Vector2f(100.f, 100.f), sf::Vector2f(300.f, 300.f));
 
+        Line c_line;
+
         //mouse position
         sf::Vector2i mouse_position;
         sf::Vector2f mouse_position_view;
 
         //entitiy containers
         std::vector<Ball> balls;
+        std::vector<Box> boxes;
 
     public:
         //constructor and destructor
@@ -51,7 +54,8 @@ class Engine{
         const bool running() const;
 
         //create Entities
-        void createEntities(sf::Vector2f vector);
+        void createBalls(sf::Vector2f vector);
+        void createBoxes(sf::Vector2f vector);
 
         //collide entities
         void collideEntities();

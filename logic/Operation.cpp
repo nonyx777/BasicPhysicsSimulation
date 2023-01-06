@@ -92,3 +92,13 @@ sf::Vector2f Operation::_vectorProjection(sf::Vector2f a, sf::Vector2f b){
     float p_1 = this->_dotProduct(a, b)/pow(this->_magnitude(b), 2);
     return b*p_1;
 }
+
+//...
+float Operation::_clampOnRange(float x, float min, float max){
+    if(x < min)
+        return min;
+    else if(max < x)
+        return max;
+    else
+        return x;
+}

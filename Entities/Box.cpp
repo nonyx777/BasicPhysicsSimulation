@@ -2,34 +2,54 @@
 
 //defining initializer functions
 void Box::initBox(){
-    this->box_property.setSize(sf::Vector2f(50.f, 50.f));
-    this->box_property.setFillColor(sf::Color::White);
+    this->acceleration = 0.1f;
+    this->elasticity = 1.f;
+    this->mass = 2.5f;
+    this->inverse_mass = this->mass == 0.f ? 0.f : 1.f/this->mass;
 }
 
 //constructor
-Box::Box(float x, float y){
+Box::Box(){
     this->initBox();
-    this->box_property.setPosition(x, y);
-    this->box_origin = this->box_property.getSize()/2.f;
-    this->box_property.setOrigin(this->box_origin);
 }
 
 //defining main functions
-void Box::boxUpdate(sf::Vector2f target_position){
-    this->boxMovement(target_position);
+void Box::boxUpdate(){
+    this->boxMovement();
 }
 void Box::boxRender(sf::RenderTarget* target){
     target->draw(this->box_property);
 }
 
-void Box::boxMovement(sf::Vector2f target_position){
-    this->box_property.setPosition(target_position);
+void Box::boxMovement(){
+    this->box_property.move(this->getBoxVelocity());
 }
 
 //defining accessor and mutators
 sf::Vector2f Box::getBoxPosition(){
     return this->box_property.getPosition();
 }
-sf::Vector2f Box::getBoxOrigin(){
-    return this->box_origin;
+void Box::setBoxPosition(sf::Vector2f vector){
+    this->box_property.setPosition(vector);
+}
+sf::Vector2f Box::getBoxVelocity(){
+    return this->velocity;
+}
+void Box::setBoxVelocity(sf::Vector2f velocity){
+    this->velocity = velocity;
+}
+float Box::getBoxElasticity(){
+    return this->elasticity;
+}
+void Box::setBoxElasticity(float elasticity){
+    this->elasticity = elasticity;
+}
+float Box::getBoxMass(){
+    return this->mass;
+}
+void Box::setBoxMass(float mass){
+    this->mass = mass;
+}
+float Box::getBoxInverseMass(){
+    return this->inverse_mass;
 }

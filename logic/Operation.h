@@ -34,4 +34,7 @@ class Operation{
         float _dotProduct(sf::Vector2f a, sf::Vector2f b);
         bool _parallelVectors(sf::Vector2f a, sf::Vector2f b);
         sf::Vector2f _vectorProjection(sf::Vector2f a, sf::Vector2f b);
+
+        //...
+        float _clampOnRange(float x, float min, float max);
 };

@@ -2,7 +2,9 @@
 
 class Box{
     private:
-        sf::Vector2f box_origin;
+        //physics attributes
+        sf::Vector2f velocity, acceleration_vector;
+        float acceleration, friction, elasticity, mass, inverse_mass;
 
         //initializer functions
         void initBox();
@@ -10,17 +12,23 @@ class Box{
     public:
         sf::RectangleShape box_property;
         //constructor and destructor
-        Box(float x = 640.f/2, float y = 360.f/2);
+        Box();
 
         //main box functions
-        void boxUpdate(sf::Vector2f vector);
+        void boxUpdate();
         void boxRender(sf::RenderTarget* target);
 
         //transform functions
-        void boxMovement(sf::Vector2f target_position);
+        void boxMovement();
 
         //accessors and mutators
         sf::Vector2f getBoxPosition();
-        sf::Vector2f getBoxOrigin();
-
+        void setBoxPosition(sf::Vector2f vector);
+        sf::Vector2f getBoxVelocity();
+        void setBoxVelocity(sf::Vector2f vector);
+        float getBoxElasticity();
+        void setBoxElasticity(float elasticity);
+        float getBoxMass();
+        void setBoxMass(float mass);
+        float getBoxInverseMass();
 };
