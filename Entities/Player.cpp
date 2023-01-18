@@ -50,8 +50,9 @@ void Player::playerMovement(){
     if(!this->a_pressed && !this->d_pressed)
         this->acceleration_vector.x = 0.f;
 
-    this->velocity.x += this->acceleration_vector.x;
-    this->velocity.y += this->acceleration_vector.y;
+    // this->velocity.x += this->acceleration_vector.x;
+    // this->velocity.y += this->acceleration_vector.y;
+    this->velocity += this->acceleration_vector;
 
     //this->velocity *= 1-this->friction;
 

@@ -4,7 +4,7 @@
 //defining initializer functions
 void Ball::initBall(){
     this->acceleration = 0.1f;
-    this->elasticity = 1.f;
+    this->elasticity = 0.2f;
     this->mass = 2.5f;
     this->inverse_mass = this->mass == 0.f ? 0.f : 1.f/this->mass;
 }
@@ -24,7 +24,8 @@ void Ball::ballRender(sf::RenderTarget* target){
 
 //defining transform functions
 void Ball::ballMovement(){
-    this->ball_property.move(this->getBallVelocity());
+    this->velocity += this->gravity_vector;
+    this->ball_property.move(this->velocity);
 }
 
 //defiining accessors and mutators

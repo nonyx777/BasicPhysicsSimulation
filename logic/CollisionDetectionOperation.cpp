@@ -142,7 +142,7 @@ void CollisionDetectionOperation::_ballPointCollisionResolution(Ball &ball, sf::
     sf::Vector2f relative_velocity = this->operation._displacement(ball.getBallVelocity(), sf::Vector2f(0.f, 0.f));
     float separating_velocity = this->operation._dotProduct(relative_velocity, normal);
     sf::Vector2f separating_velocity_vector = normal * separating_velocity;
-    this->b_velocity = -separating_velocity_vector;
+    this->b_velocity = -separating_velocity_vector * ball.getBallElasticity();
 }
 
     //box-box penetration resoultion

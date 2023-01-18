@@ -4,6 +4,10 @@
 class Ball{
     private:
         //physics attributes
+            //gravity
+        const float gravity = 0.1f;
+        const sf::Vector2f gravity_vector = sf::Vector2f(0.f, this->gravity);
+
         sf::Vector2f velocity, acceleration_vector;
         float acceleration, friction, elasticity, mass, inverse_mass;
 

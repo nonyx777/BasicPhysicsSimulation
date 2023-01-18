@@ -12,7 +12,7 @@ void Engine::initVariables(){
 void Engine::initWindow(){
     this->video_mode.width = 640;
     this->video_mode.height = 360;
-    this->window = new sf::RenderWindow(this->video_mode, "Collision Detection", sf::Style::Titlebar | sf::Style::Close);
+    this->window = new sf::RenderWindow(this->video_mode, "Collision Detection", sf::Style::Titlebar | sf::Style::Resize |sf::Style::Close);
     this->window->setFramerateLimit(60);
 }
 
@@ -34,8 +34,8 @@ const bool Engine::running() const{
     //create entities
 void Engine::createBalls(sf::Vector2f vector){
     Ball ball;
-    ball.ball_property.setRadius(20.f);
-    ball.ball_property.setFillColor(sf::Color::Transparent);
+    ball.ball_property.setRadius(10.f);
+    ball.ball_property.setFillColor(sf::Color::White);
     ball.ball_property.setOrigin(sf::Vector2f(ball.getBallRadius(), ball.getBallRadius()));
     ball.ball_property.setOutlineColor(sf::Color::White);
     ball.ball_property.setOutlineThickness(1.f);
@@ -44,7 +44,7 @@ void Engine::createBalls(sf::Vector2f vector){
 }
 void Engine::createBoxes(sf::Vector2f vector){
     Box box;
-    box.box_property.setSize(sf::Vector2f(50.f, 50.f));
+    box.box_property.setSize(sf::Vector2f(5.f, 5.f));
     box.box_property.setOrigin(box.box_property.getSize().x/2.f, box.box_property.getSize().y/2.f);
     box.box_property.setFillColor(sf::Color::Transparent);
     box.box_property.setOutlineColor(sf::Color::Cyan);
@@ -55,18 +55,6 @@ void Engine::createBoxes(sf::Vector2f vector){
 
 void Engine::collideEntities(){
     //penetration resolution and collision resolution
-        //player and ball
-    for(auto &ball : this->balls){
-        if(this->collisionDetectionOperation._ballCollide(this->player.player_property, ball.ball_property)){
-            this->collisionDetectionOperation._ballBallPenetrationResolution(this->player, ball);
-            this->player.player_property.move(this->collisionDetectionOperation.a_position);
-            ball.ball_property.move(this->collisionDetectionOperation.b_position);
-            this->collisionDetectionOperation._ballBallCollisionResolution(this->player, ball);
-            this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
-            ball.setBallVelocity(this->collisionDetectionOperation.b_velocity);
-        }
-    }
-    // }
         //player and window
     for(auto &boundary : this->window_boundaries){
         if(collisionDetectionOperation._ballSegmentOverlapping(this->player.player_property, boundary)){
@@ -76,17 +64,15 @@ void Engine::collideEntities(){
             this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
         }
     }
-        //ball and ball
-    for(int i = 0; i < this->balls.size(); i++){
-        for(int j = i+1; j < this->balls.size(); j++){
-            if(this->collisionDetectionOperation._ballCollide(this->balls[i].ball_property, this->balls[j].ball_property)){
-                this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i], this->balls[j]);
-                this->balls[i].ball_property.move(this->collisionDetectionOperation.a_position);
-                this->balls[j].ball_property.move(this->collisionDetectionOperation.b_position);
-                this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
-                // this->balls[i].setBallVelocity(this->collisionDetectionOperation.a_velocity);
-                // this->balls[j].setBallVelocity(this->collisionDetectionOperation.b_velocity);
-            }
+        //player and ball
+    for(auto &ball : this->balls){
+        if(this->collisionDetectionOperation._ballCollide(this->player.player_property, ball.ball_property)){
+            this->collisionDetectionOperation._ballBallPenetrationResolution(this->player, ball);
+            this->player.player_property.move(this->collisionDetectionOperation.a_position);
+            ball.ball_property.move(this->collisionDetectionOperation.b_position);
+            this->collisionDetectionOperation._ballBallCollisionResolution(this->player, ball);
+            // this->player.setPlayerVelocity(this->collisionDetectionOperation.a_velocity);
+            // ball.setBallVelocity(this->collisionDetectionOperation.b_velocity);
         }
     }
         //ball and window(line)
@@ -99,6 +85,19 @@ void Engine::collideEntities(){
                 ball.setBallVelocity(this->collisionDetectionOperation.b_velocity);
             }
         }   
+    }
+        //ball and ball
+    for(int i = 0; i < this->balls.size(); i++){
+        for(int j = i+1; j < this->balls.size(); j++){
+            if(this->collisionDetectionOperation._ballCollide(this->balls[i].ball_property, this->balls[j].ball_property)){
+                this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i], this->balls[j]);
+                this->balls[i].ball_property.move(this->collisionDetectionOperation.a_position);
+                this->balls[j].ball_property.move(this->collisionDetectionOperation.b_position);
+                // this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
+                // this->balls[i].setBallVelocity(this->collisionDetectionOperation.a_velocity);
+                // this->balls[j].setBallVelocity(this->collisionDetectionOperation.b_velocity);
+            }
+        }
     }
         //box and box
     for(int i = 0; i < this->boxes.size(); i++){
@@ -173,9 +172,9 @@ void Engine::render(){
         ball.ballRender(this->window);
     for(auto &box : this->boxes)
         box.boxRender(this->window);
-    // for(auto &line : this->window_boundaries)
-    //     line.lineRender(this->window);
-    // this->player.playerRender(this->window);
+    for(auto &line : this->window_boundaries)
+        line.lineRender(this->window);
+    this->player.playerRender(this->window);
     
     this->c_line.lineRender(this->window);
     this->window->display();
