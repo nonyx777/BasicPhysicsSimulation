@@ -88,27 +88,31 @@ void Engine::collideEntities(){
     }
         //ball and ball
     for(int i = 0; i < this->balls.size(); i++){
-        for(int j = i+1; j < this->balls.size(); j++){
-            if(this->collisionDetectionOperation._ballCollide(this->balls[i].ball_property, this->balls[j].ball_property)){
-                this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i], this->balls[j]);
-                this->balls[i].ball_property.move(this->collisionDetectionOperation.a_position);
-                this->balls[j].ball_property.move(this->collisionDetectionOperation.b_position);
-                // this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
-                // this->balls[i].setBallVelocity(this->collisionDetectionOperation.a_velocity);
-                // this->balls[j].setBallVelocity(this->collisionDetectionOperation.b_velocity);
+        for(int j = 0; j < this->balls.size(); j++){
+            if(i != j){
+                if(this->collisionDetectionOperation._ballCollide(this->balls[i].ball_property, this->balls[j].ball_property)){
+                    this->collisionDetectionOperation._ballBallPenetrationResolution(this->balls[i], this->balls[j]);
+                    this->balls[i].ball_property.move(this->collisionDetectionOperation.a_position);
+                    this->balls[j].ball_property.move(this->collisionDetectionOperation.b_position);
+                    // this->collisionDetectionOperation._ballBallCollisionResolution(this->balls[i], this->balls[j]);
+                    // this->balls[i].setBallVelocity(this->collisionDetectionOperation.a_velocity);
+                    // this->balls[j].setBallVelocity(this->collisionDetectionOperation.b_velocity);
+                }
             }
         }
     }
         //box and box
     for(int i = 0; i < this->boxes.size(); i++){
-        for(int j = i+1; j < this->boxes.size(); j++){
-            if(this->collisionDetectionOperation._boxCollide(this->boxes[i], this->boxes[j])){
-                this->collisionDetectionOperation._boxBoxPenetrationResolution(this->boxes[i], this->boxes[j]);
-                this->boxes[i].box_property.move(this->collisionDetectionOperation.a_position);
-                this->boxes[j].box_property.move(this->collisionDetectionOperation.b_position);
-                // this->collisionDetectionOperation._boxBoxCollisionResolution(this->boxes[i], this->boxes[j]);
-                // this->boxes[i].setBoxVelocity(this->collisionDetectionOperation.a_velocity);
-                // this->boxes[j].setBoxVelocity(this->collisionDetectionOperation.b_velocity);
+        for(int j = 0; j < this->boxes.size(); j++){
+            if(i != j){
+                if(this->collisionDetectionOperation._boxCollide(this->boxes[i], this->boxes[j])){
+                    this->collisionDetectionOperation._boxBoxPenetrationResolution(this->boxes[i], this->boxes[j]);
+                    this->boxes[i].box_property.move(this->collisionDetectionOperation.a_position);
+                    this->boxes[j].box_property.move(this->collisionDetectionOperation.b_position);
+                    // this->collisionDetectionOperation._boxBoxCollisionResolution(this->boxes[i], this->boxes[j]);
+                    // this->boxes[i].setBoxVelocity(this->collisionDetectionOperation.a_velocity);
+                    // this->boxes[j].setBoxVelocity(this->collisionDetectionOperation.b_velocity);
+                }
             }
         }
     }
